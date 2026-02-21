@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bg-primary text-text-primary font-mono antialiased;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* High-contrast terminal scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-primary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border border-2 border-bg-primary;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent-gold;
+  }
+
+  :root {
+    --brand-amber: #F59E0B;
+    --accent-blue: #3B82F6;
+    --accent-red: #EF4444;
+    --terminal-green: #10B981;
+  }
+}
+
+@layer components {
+  .terminal-card {
+    @apply bg-bg-secondary border border-border shadow-terminal transition-all;
+  }
+
+  .terminal-card:hover {
+    @apply border-accent-gold/30 shadow-terminal-focus;
+  }
+
+  .terminal-table {
+    @apply w-full text-xs text-left text-text-primary border-collapse;
+  }
+
+  .terminal-th {
+    @apply px-4 py-2 bg-bg-tertiary border border-border font-bold text-accent-gold sticky top-0 z-10 uppercase tracking-tighter;
+  }
+
+  .terminal-td {
+    @apply px-4 py-2 border border-border font-mono;
+  }
+
+  .terminal-tr {
+    @apply hover:bg-bg-tertiary transition-colors cursor-pointer;
+  }
+
+  .terminal-input {
+    @apply bg-bg-tertiary border border-border text-text-primary px-3 py-1.5 font-mono transition-all;
+    outline: none;
+  }
+
+  .terminal-input:focus {
+    @apply border-accent-gold shadow-terminal-focus;
+  }
+
+  .terminal-btn {
+    @apply px-4 py-2 text-text-secondary hover:text-accent-gold hover:bg-bg-tertiary border border-transparent hover:border-border transition-all flex items-center justify-center gap-2 uppercase text-[10px] font-bold tracking-widest;
+  }
+
+  .terminal-btn-primary {
+    @apply px-5 py-2 text-bg-primary bg-accent-gold font-bold active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase tracking-wide;
+  }
+
+  .terminal-btn-primary:hover {
+    @apply brightness-110;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+  }
+
+  /* Keep legacy mappings for components that use premium classes */
+  .premium-card {
+    @apply terminal-card;
+  }
+
+  .premium-card-green {
+    @apply terminal-card border-terminal-green/20 bg-terminal-green/5;
+  }
+
+  .premium-card-dark {
+    @apply terminal-card bg-black;
+  }
+
+  .modern-table {
+    @apply terminal-table;
+  }
+
+  .modern-th {
+    @apply terminal-th;
+  }
+
+  .modern-td {
+    @apply terminal-td;
+  }
+
+  .modern-tr {
+    @apply terminal-tr;
+  }
+
+  .modern-input {
+    @apply terminal-input;
+  }
+
+  .btn-primary {
+    @apply terminal-btn-primary;
+  }
+
+  .btn-ghost {
+    @apply terminal-btn;
+  }
+
+  /* Badges - Terminal Style */
+  .badge {
+    @apply px-2 py-0.5 rounded-none text-[9px] font-bold uppercase tracking-tighter border;
+  }
+
+  .badge-vip {
+    @apply border-accent-gold bg-accent-gold/10 text-accent-gold;
+  }
+
+  .badge-priority {
+    @apply border-accent-blue bg-accent-blue/10 text-accent-blue;
+  }
+
+  .badge-mass {
+    @apply border-border bg-border/10 text-text-secondary;
+  }
+}
