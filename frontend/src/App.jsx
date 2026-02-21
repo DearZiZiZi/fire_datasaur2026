@@ -4,9 +4,7 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Tickets from './pages/Tickets';
 import Managers from './pages/Managers';
-import Analytics from './pages/Analytics';
 import Assistant from './pages/Assistant';
-import Synthetic from './pages/Synthetic';
 
 function App() {
   return (
@@ -17,9 +15,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="tickets" element={<Tickets />} />
           <Route path="managers" element={<Managers />} />
-          <Route path="analytics" element={<Analytics />} />
           <Route path="assistant" element={<Assistant />} />
-          <Route path="synthetic" element={<Synthetic />} />
         </Route>
       </Routes>
     </BrowserRouter>

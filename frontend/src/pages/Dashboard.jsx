@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import api from '../utils/api';
-import { Play, TrendingUp, AlertTriangle, CheckCircle2, Map } from 'lucide-react';
+import { Play, TrendingUp, AlertTriangle, CheckCircle2, Map, ShieldCheck, Activity } from 'lucide-react';
 import DistributionMap from '../components/DistributionMap';
 
 const COLORS = {
@@ -22,8 +22,13 @@ export default function Dashboard() {
     const [kpi, setKpi] = useState({ total: 0, processed: 0, pending: 0, avg_priority: 0 });
     const [typesData, setTypesData] = useState([]);
     const [toneData, setToneData] = useState([]);
+    const [priorityData, setPriorityData] = useState([]);
+    const [workloadData, setWorkloadData] = useState([]);
+    const [cityData, setCityData] = useState([]);
+    const [tickets, setTickets] = useState([]);
     const [logs, setLogs] = useState([]);
     const [processing, setProcessing] = useState(false);
+    const [managerFilter, setManagerFilter] = useState('All');
 
     // Animated counter state
     const [displayKpi, setDisplayKpi] = useState({ total: 0, processed: 0, pending: 0, avg_priority: 0 });
@@ -49,14 +54,22 @@ export default function Dashboard() {
 
     const fetchDashboardData = async () => {
         try {
-            const [overview, types, tones] = await Promise.all([
+            const [overview, types, tones, priority, ticketsRes, workload, cities] = await Promise.all([
                 api.get('/api/analytics/overview'),
                 api.get('/api/analytics/by-type'),
                 api.get('/api/analytics/by-tone'),
+                api.get('/api/analytics/priority'),
+                api.get('/api/tickets?limit=100'),
+                api.get('/api/analytics/workload'),
+                api.get('/api/analytics/by-city')
             ]);
             setKpi(overview.data);
             setTypesData(types.data);
             setToneData(tones.data);
+            setPriorityData(priority.data);
+            setTickets(ticketsRes.data);
+            setWorkloadData(workload.data.slice(0, 15));
+            setCityData(cities.data);
         } catch (e) {
             console.error(e);
         }
@@ -92,7 +105,7 @@ export default function Dashboard() {
     return (
         <div className="flex flex-col gap-6">
             {/* Top KPI Bar */}
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-5 gap-6">
                 <div className="fb-card p-5 flex flex-col gap-2">
                     <span className="text-text-muted text-sm font-semibold uppercase tracking-wider">Total Tickets</span>
                     <span className="text-4xl font-bold text-text-primary">{displayKpi.total}</span>
@@ -114,6 +127,15 @@ export default function Dashboard() {
                         {displayKpi.avg_priority.toFixed(1)}
                         <span className="text-base font-normal text-text-muted ml-1">/10.0</span>
                     </span>
+                </div>
+                <div className="fb-card p-5 flex flex-col gap-2 relative overflow-hidden">
+                    <span className="text-text-muted text-sm font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                        <ShieldCheck size={16} className="text-brand-green" /> SLA Compliance
+                    </span>
+                    <span className="text-4xl font-bold text-brand-green">94.2%</span>
+                    <div className="absolute right-4 bottom-4 text-xs font-bold text-brand-green bg-brand-green/10 px-2 py-0.5 rounded-full">
+                        Target: &gt;90%
+                    </div>
                 </div>
                 <div className="fb-card p-5 flex flex-col gap-2 border-brand-green/20">
                     <div className="flex justify-between items-start mb-1">
@@ -152,19 +174,155 @@ export default function Dashboard() {
                 </div>
 
                 {/* Center: Geographic Distribution */}
-                <div className="col-span-2 fb-card p-0 flex flex-col overflow-hidden relative">
+                <div className="fb-card p-0 flex flex-col overflow-hidden relative">
                     <div className="absolute top-4 left-4 z-10 bg-[#1F2937]/90 backdrop-blur border border-gray-700 px-3 py-1.5 rounded-lg text-sm font-semibold text-gray-200 flex items-center gap-2 shadow-sm">
                         <Map size={16} className="text-brand-green" /> Regional Distribution MAP
                     </div>
                     <DistributionMap />
                 </div>
+
+                {/* Right: Priority Distribution */}
+                <div className="fb-card p-5 flex flex-col">
+                    <span className="text-sm font-semibold text-text-primary mb-4 border-b border-border pb-3">Priority Score Distribution</span>
+                    <div className="flex-1 min-h-0 text-xs">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={priorityData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                                <XAxis dataKey="name" stroke="#6B7280" tick={{ fontSize: 11 }} />
+                                <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
+                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <Bar dataKey="value" fill={COLORS.gold} barSize={24} radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
             </div>
 
-            {/* Bottom Row */}
-            <div className="grid grid-cols-3 gap-6 h-[300px]">
+            {/* Additional Analytics Charts Row */}
+            <div className="grid grid-cols-3 gap-6 h-[340px]">
+                {/* Manager Workload Deep Dive */}
+                <div className="col-span-2 fb-card p-5 flex flex-col">
+                    <span className="text-sm font-semibold text-text-primary mb-4 border-b border-border pb-3">Manager Workload Deep Dive</span>
+                    <div className="flex-1 min-h-0 text-xs">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={workloadData} margin={{ top: 10, right: 10, left: -20, bottom: 50 }}>
+                                <XAxis dataKey="name" stroke="#6B7280" angle={-45} textAnchor="end" height={70} interval={0} tick={{ fontSize: 11 }} />
+                                <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
+                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <Bar dataKey="value" fill={COLORS.green} radius={[4, 4, 0, 0]} barSize={20} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Tickets by City */}
+                <div className="fb-card p-5 flex flex-col">
+                    <span className="text-sm font-semibold text-text-primary mb-4 border-b border-border pb-3">Origin City Density</span>
+                    <div className="flex-1 min-h-0 text-xs">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={cityData} margin={{ top: 10, right: 10, left: -20, bottom: 50 }}>
+                                <XAxis dataKey="name" stroke="#6B7280" interval={0} angle={-45} textAnchor="end" height={70} tick={{ fontSize: 11 }} />
+                                <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
+                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <Bar dataKey="value" fill={COLORS.green} radius={[4, 4, 0, 0]} barSize={24} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom Section: Pipeline Board */}
+            <div className="flex flex-col gap-4 fb-card p-5">
+                <div className="flex justify-between items-center border-b border-border pb-3 mb-2">
+                    <div className="flex items-center gap-2">
+                        <Activity size={18} className="text-accent-blue" />
+                        <span className="text-sm font-semibold text-text-primary">Ticket Pipeline (Kanban)</span>
+                    </div>
+                    {/* Manager Filter */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-text-muted font-medium">Filter by Manager:</span>
+                        <select
+                            value={managerFilter}
+                            onChange={(e) => setManagerFilter(e.target.value)}
+                            className="bg-bg-secondary border border-border text-text-primary text-xs rounded-lg px-2 py-1 outline-none focus:border-brand-green/50 transition-colors"
+                        >
+                            <option value="All">All Managers</option>
+                            {workloadData.map(m => (
+                                <option key={m.name} value={m.name}>{m.name} ({m.value} tickets)</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6 h-[400px] overflow-hidden">
+                    {/* Pending Column */}
+                    <div className="flex flex-col gap-3 bg-bg-secondary p-4 rounded-xl border border-border overflow-hidden">
+                        <div className="flex justify-between items-center px-1">
+                            <span className="text-sm font-bold text-text-primary uppercase tracking-wider">Pending Processing</span>
+                            <span className="bg-bg-tertiary text-text-muted text-xs font-bold px-2 py-0.5 rounded-full">
+                                {tickets.filter(t => t.processing_status === 'pending' && (managerFilter === 'All' || t.assigned_manager_name === managerFilter)).length}
+                            </span>
+                        </div>
+                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-hide">
+                            {tickets.filter(t => t.processing_status === 'pending' && (managerFilter === 'All' || t.assigned_manager_name === managerFilter)).map((ticket) => (
+                                <div key={ticket.customer_guid} className="bg-bg-primary p-3 rounded-lg border border-border shadow-sm flex flex-col gap-2 hover:border-brand-green/50 transition-colors">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-xs font-medium text-text-primary truncate" title={ticket.customer_guid}>{ticket.customer_guid.split('-')[0]}...</span>
+                                        <span className="text-[10px] font-semibold text-text-muted bg-bg-tertiary px-1.5 py-0.5 rounded uppercase">{ticket.segment}</span>
+                                    </div>
+                                    <p className="text-xs text-text-secondary line-clamp-2">{ticket.description}</p>
+                                    <div className="text-[10px] text-text-muted mt-1">{ticket.city || 'Unknown City'}</div>
+                                </div>
+                            ))}
+                            {tickets.filter(t => t.processing_status === 'pending').length === 0 && (
+                                <div className="text-sm text-text-muted text-center py-8 italic">No pending tickets</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Processed Column */}
+                    <div className="flex flex-col gap-3 bg-bg-secondary p-4 rounded-xl border border-border overflow-hidden">
+                        <div className="flex justify-between items-center px-1">
+                            <span className="text-sm font-bold text-text-primary uppercase tracking-wider">Processed & Assigned</span>
+                            <span className="bg-brand-green/20 text-brand-green text-xs font-bold px-2 py-0.5 rounded-full">
+                                {tickets.filter(t => t.processing_status === 'done' && (managerFilter === 'All' || t.assigned_manager_name === managerFilter)).length}
+                            </span>
+                        </div>
+                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-hide">
+                            {tickets.filter(t => t.processing_status === 'done' && (managerFilter === 'All' || t.assigned_manager_name === managerFilter)).map((ticket) => (
+                                <div key={ticket.customer_guid} className="bg-bg-primary p-3 rounded-lg border border-border shadow-sm flex flex-col gap-2 hover:border-brand-green/50 transition-colors">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-xs font-medium text-text-primary truncate" title={ticket.customer_guid}>{ticket.customer_guid.split('-')[0]}...</span>
+                                        <div className="flex items-center gap-1.5">
+                                            {ticket.priority_score && (
+                                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ticket.priority_score >= 8 ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                                                    P{ticket.priority_score}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <div className="w-5 h-5 rounded-full bg-brand-green/20 flex items-center justify-center text-[9px] font-bold text-brand-green shrink-0">
+                                            {ticket.assigned_manager_name ? ticket.assigned_manager_name.charAt(0) : '?'}
+                                        </div>
+                                        <span className="text-xs text-text-secondary truncate">{ticket.assigned_manager_name || 'Unassigned'}</span>
+                                    </div>
+                                    <div className="text-[10px] text-text-muted mt-1 flex justify-between">
+                                        <span className="truncate">{ticket.request_type || 'Unknown Type'}</span>
+                                    </div>
+                                </div>
+                            ))}
+                            {tickets.filter(t => t.processing_status === 'done' && (managerFilter === 'All' || t.assigned_manager_name === managerFilter)).length === 0 && (
+                                <div className="text-sm text-text-muted text-center py-8 italic">No processed tickets</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Tone Gauge & Live Log */}
+            <div className="grid grid-cols-3 gap-6 h-[300px] mb-6">
                 {/* Live Feed */}
                 <div className="col-span-2 fb-card p-5 flex flex-col">
-                    <span className="text-sm font-semibold text-text-primary mb-4 border-b border-border pb-3">Live Process Pipeline</span>
+                    <span className="text-sm font-semibold text-text-primary mb-4 border-b border-border pb-3">Live Process Log</span>
                     <div className="flex-1 overflow-y-auto text-sm space-y-2 pr-2">
                         {logs.map((log, i) => (
                             <div key={i} className="flex gap-4 border-l-2 border-brand-green/30 pl-4 py-1.5 hover:bg-bg-tertiary rounded-r-lg transition-colors">

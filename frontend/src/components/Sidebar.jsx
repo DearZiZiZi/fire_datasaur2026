@@ -1,15 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Ticket, Users, BarChart3, Bot, FlaskConical, Settings } from 'lucide-react';
+import { LayoutDashboard, Ticket, Users, BarChart3, Bot, Settings } from 'lucide-react';
 
 export default function Sidebar() {
     const links = [
         { to: '/', label: 'Dashboard', icon: LayoutDashboard },
         { to: '/tickets', label: 'Tickets', icon: Ticket },
         { to: '/managers', label: 'Managers', icon: Users },
-        { to: '/analytics', label: 'Analytics', icon: BarChart3 },
         { to: '/assistant', label: 'AI Assistant', icon: Bot },
-        { to: '/synthetic', label: 'Synthetic Data', icon: FlaskConical },
     ];
 
     return (
