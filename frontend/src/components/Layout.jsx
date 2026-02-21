@@ -5,11 +5,11 @@ import Sidebar from './Sidebar';
 
 export default function Layout() {
     return (
-        <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col">
+        <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col font-sans">
             <Header />
-            <div className="flex flex-1 pt-[56px]">
+            <div className="flex flex-1 pt-[64px]">
                 <Sidebar />
-                <main className="flex-1 ml-[240px] p-8 h-[calc(100vh-56px)] overflow-y-auto">
+                <main className="flex-1 ml-[240px] p-8 h-[calc(100vh-64px)] overflow-y-auto">
                     <Outlet />
                 </main>
             </div>

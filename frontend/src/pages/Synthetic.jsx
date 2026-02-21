@@ -22,63 +22,63 @@ export default function Synthetic() {
     };
 
     return (
-        <div className="flex flex-col h-full items-center justify-center">
-            <div className="terminal-card w-full max-w-[600px] p-0 flex flex-col">
+        <div className="flex flex-col h-full items-center justify-center p-6 bg-bg-primary font-sans">
+            <div className="fb-card w-full max-w-[600px] p-0 flex flex-col shadow-lg border-border">
 
-                <div className="p-4 border-b border-border bg-bg-secondary flex items-center gap-3">
-                    <div className="text-accent-gold bg-accent-gold/10 p-2 border border-accent-gold/20 transition-colors">
-                        <FlaskConical size={20} />
+                <div className="p-6 border-b border-border bg-white rounded-t-xl flex items-center gap-4">
+                    <div className="text-brand-green bg-brand-green/10 p-3 rounded-xl border border-brand-green/20">
+                        <FlaskConical size={24} />
                     </div>
                     <div>
-                        <h2 className="text-lg font-bold text-accent-gold font-mono uppercase tracking-tighter">DATA_SYNTHESIS_ENGINE</h2>
-                        <p className="text-[10px] text-text-muted font-mono uppercase tracking-widest">GENERATE_VALIDATION_STREAM_FOR_PIPELINE</p>
+                        <h2 className="text-xl font-bold text-text-primary tracking-tight">Data Synthesis Engine</h2>
+                        <p className="text-sm text-text-secondary mt-1">Generate Validation Stream for Pipeline</p>
                     </div>
                 </div>
 
-                <div className="p-6 space-y-6">
-                    <div className="flex border border-border">
-                        <div className="bg-bg-tertiary px-4 py-2 text-text-muted font-mono text-[11px] border-r border-border flex items-center uppercase font-bold">
-                            UNITS_COUNT:
-                        </div>
+                <div className="p-6 space-y-6 bg-white rounded-b-xl">
+                    <div className="flex items-center gap-4">
+                        <label className="text-sm font-semibold text-text-primary w-28 shrink-0">
+                            Unit Count
+                        </label>
                         <input
                             type="number"
-                            className="flex-1 bg-transparent border-none text-text-primary px-4 py-2 font-mono text-[11px] focus:outline-none"
+                            className="flex-1 fb-input py-2.5 shadow-sm"
                             value={count}
                             onChange={(e) => setCount(parseInt(e.target.value) || 0)}
                             min="1" max="1000"
                         />
                     </div>
 
-                    <div className="text-[10px] font-mono text-text-secondary bg-bg-tertiary border border-border p-4">
-                        <p className="mb-2 text-accent-gold font-bold uppercase tracking-widest">Distribution Protocol:</p>
-                        <ul className="space-y-1 mb-4">
-                            <li>SEGMENTS: Mass [60%] VIP [25%] Priority [15%]</li>
-                            <li>LANGUAGES: RU [60%] KZ [25%] ENG [15%]</li>
-                            <li>LOCALES: KZ Cities + 5% Global Fallback</li>
+                    <div className="text-sm text-text-secondary bg-bg-primary border border-border p-5 rounded-xl">
+                        <p className="mb-2 text-text-primary font-semibold">Distribution Protocol:</p>
+                        <ul className="space-y-1.5 mb-5 pl-1">
+                            <li className="flex gap-2"><span className="w-1.5 h-1.5 rounded-full bg-brand-green mt-1.5 shrink-0"></span>Segments: Retail [60%] VIP [25%] Priority [15%]</li>
+                            <li className="flex gap-2"><span className="w-1.5 h-1.5 rounded-full bg-brand-green mt-1.5 shrink-0"></span>Languages: RU [60%] KZ [25%] ENG [15%]</li>
+                            <li className="flex gap-2"><span className="w-1.5 h-1.5 rounded-full bg-brand-green mt-1.5 shrink-0"></span>Locales: KZ Cities + 5% Global Fallback</li>
                         </ul>
 
-                        <p className="mb-2 text-accent-gold font-bold mt-4 uppercase tracking-widest">Logic Validation:</p>
-                        <ul className="space-y-1 text-accent-green">
-                            <li>[OK] VIP + KZ Routing Rules</li>
-                            <li>[OK] Data Modification Restrictions</li>
-                            <li>[OK] Semantic Intelligence Fallback</li>
+                        <p className="mb-2 text-text-primary font-semibold mt-4">Logic Validation:</p>
+                        <ul className="space-y-1.5 pl-1 text-brand-green font-medium">
+                            <li className="flex gap-2 items-center"><CheckCircle2 size={14} /> VIP + KZ Routing Rules</li>
+                            <li className="flex gap-2 items-center"><CheckCircle2 size={14} /> Data Modification Restrictions</li>
+                            <li className="flex gap-2 items-center"><CheckCircle2 size={14} /> Semantic Intelligence Fallback</li>
                         </ul>
                     </div>
 
                     {result && (
-                        <div className="bg-accent-green/10 border border-accent-green text-accent-green p-3 text-[10px] font-mono flex items-center gap-2 uppercase font-bold">
-                            <CheckCircle2 size={14} />
-                            SYSTEM_ACK: {result}
+                        <div className="bg-brand-green/10 border border-brand-green/30 text-brand-green p-4 rounded-xl text-sm font-semibold flex items-center gap-3">
+                            <CheckCircle2 size={18} className="shrink-0" />
+                            System Ack: {result}
                         </div>
                     )}
 
                     <button
                         onClick={handleGenerate}
                         disabled={loading || count < 1}
-                        className="w-full bg-accent-gold hover:brightness-110 disabled:opacity-30 text-bg-primary font-bold py-3 px-4 flex items-center justify-center gap-2 transition-all uppercase tracking-[0.2em] shadow-terminal"
+                        className="fb-btn-primary w-full py-3.5 text-base flex justify-center items-center shadow-md"
                     >
-                        {loading ? <span className="animate-spin w-4 h-4 border-2 border-bg-primary rounded-full border-t-transparent" /> : <Play size={16} fill="currentColor" />}
-                        EXECUTE_GENESIS
+                        {loading ? <span className="animate-spin w-5 h-5 border-2 border-white rounded-full border-t-transparent mr-2" /> : <Play size={18} fill="currentColor" className="mr-2" />}
+                        {loading ? 'Synthesizing...' : 'Execute Data Genesis'}
                     </button>
                 </div>
 

@@ -12,13 +12,6 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const officeIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-});
-
 export default function DistributionMap() {
     const [offices, setOffices] = useState([]);
     const [recentTickets, setRecentTickets] = useState([]);
@@ -48,15 +41,15 @@ export default function DistributionMap() {
     }, []);
 
     const getOfficeColor = (load) => {
-        if (load < 5) return '#10B981'; // Green
+        if (load < 5) return '#00B25B'; // Brand Green
         if (load < 10) return '#F59E0B'; // Gold
         return '#EF4444'; // Red
     };
 
-    if (loading) return <div className="h-full w-full flex items-center justify-center bg-bg-primary text-text-muted font-bold text-[10px] uppercase tracking-widest animate-pulse font-mono">LOADING_MAP_TELEMETRY...</div>;
+    if (loading) return <div className="h-full w-full flex items-center justify-center bg-bg-primary text-text-muted font-medium text-sm animate-pulse">Loading Map Telemetry...</div>;
 
     return (
-        <div className="h-full w-full relative">
+        <div className="h-full w-full relative font-sans">
             <MapContainer
                 center={[48.0196, 66.9237]}
                 zoom={4}
@@ -77,23 +70,23 @@ export default function DistributionMap() {
                         pathOptions={{
                             color: getOfficeColor(office.load),
                             fillColor: getOfficeColor(office.load),
-                            fillOpacity: 0.15,
+                            fillOpacity: 0.25,
                             weight: 2
                         }}
                         radius={10 + (office.load * 0.5)}
                     >
-                        <Popup>
-                            <div className="text-[10px] font-mono uppercase bg-bg-primary text-text-primary p-1">
-                                <strong className="text-accent-gold">{office.office}</strong><br />
-                                <span className="text-text-muted">{office.address}</span><br />
-                                <span className="font-bold text-accent-green mt-1 block">LOAD_BAL: {office.load} UNITS</span>
+                        <Popup className="rounded-xl shadow-md border-0">
+                            <div className="text-xs font-sans bg-[#1F2937] text-white p-3 min-w-[160px] rounded-xl shadow-lg border border-gray-700">
+                                <strong className="text-white text-sm tracking-tight">{office.office}</strong><br />
+                                <span className="text-gray-400 mt-1 block">{office.address}</span>
+                                <span className="font-semibold text-brand-green mt-3 block border-t border-gray-700 pt-2 text-[11px] uppercase tracking-wider">Load Balance: {office.load} Assets</span>
                             </div>
                         </Popup>
                     </CircleMarker>
                 ))}
 
                 {/* Assignment Flow Lines (Arcs) */}
-                {recentTickets.map((t, idx) => {
+                {recentTickets.map((t) => {
                     const targetOffice = offices.find(o => o.office === t.assigned_office);
                     if (!targetOffice) return null;
 
@@ -102,16 +95,16 @@ export default function DistributionMap() {
                             <Polyline
                                 positions={[[t.lat, t.lng], [targetOffice.lat, targetOffice.lng]]}
                                 pathOptions={{
-                                    color: '#F59E0B',
-                                    weight: 1,
-                                    dashArray: '3, 6',
-                                    opacity: 0.4
+                                    color: '#00B25B',
+                                    weight: 1.5,
+                                    dashArray: '4, 8',
+                                    opacity: 0.6
                                 }}
                             />
                             <CircleMarker
                                 center={[t.lat, t.lng]}
-                                pathOptions={{ color: '#F59E0B', weight: 1, fillOpacity: 1, fillColor: '#0B0E14' }}
-                                radius={2}
+                                pathOptions={{ color: '#00B25B', weight: 1.5, fillOpacity: 1, fillColor: '#0B0E14' }}
+                                radius={3}
                             />
                         </React.Fragment>
                     );
@@ -119,24 +112,24 @@ export default function DistributionMap() {
             </MapContainer>
 
             {/* Legend Overlay */}
-            <div className="absolute bottom-6 left-6 z-[1000] bg-bg-secondary border border-border p-4 pointer-events-none shadow-terminal font-mono">
-                <div className="text-[9px] font-bold uppercase text-text-muted mb-3 tracking-widest border-b border-border pb-2">LOAD_CAPACITY_IND</div>
-                <div className="space-y-2">
+            <div className="absolute bottom-6 left-6 z-[1000] bg-[#1F2937] border border-gray-700 p-5 rounded-xl pointer-events-none shadow-lg font-sans max-w-[200px]">
+                <div className="text-xs font-semibold uppercase text-gray-400 mb-4 tracking-wider border-b border-gray-700 pb-2">Load Capacity</div>
+                <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-accent-green"></div>
-                        <span className="text-[9px] font-bold text-text-secondary uppercase">OPTIMAL_READY</span>
+                        <div className="w-3 h-3 rounded-full bg-brand-green shadow-[0_0_8px_rgba(0,178,91,0.5)]"></div>
+                        <span className="text-sm font-medium text-gray-200">Optimal Level</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-accent-gold"></div>
-                        <span className="text-[9px] font-bold text-text-secondary uppercase">MODERATE_LOAD</span>
+                        <div className="w-3 h-3 rounded-full bg-accent-gold shadow-[0_0_8px_rgba(245,158,11,0.5)]"></div>
+                        <span className="text-sm font-medium text-gray-200">Moderate Load</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-accent-red"></div>
-                        <span className="text-[9px] font-bold text-text-secondary uppercase">CRITICAL_SAT</span>
+                        <div className="w-3 h-3 rounded-full bg-accent-red shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
+                        <span className="text-sm font-medium text-gray-200">Critical Saturation</span>
                     </div>
-                    <div className="flex items-center gap-3 border-t border-border pt-3 mt-1">
-                        <div className="w-6 h-[1px] border-t border-dashed border-accent-gold opacity-50"></div>
-                        <span className="text-[9px] font-bold text-text-secondary uppercase tracking-tighter">ROUTING_VECTOR</span>
+                    <div className="flex items-center gap-3 border-t border-gray-700 pt-4 mt-2">
+                        <div className="w-6 h-[2px] border-t-2 border-dashed border-brand-green opacity-70"></div>
+                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Routing Vector</span>
                     </div>
                 </div>
             </div>

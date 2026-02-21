@@ -1,9 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, ScatterChart, Scatter, ZAxis } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import api from '../utils/api';
 
 const COLORS = {
-    blue: '#3B82F6', gold: '#F59E0B', red: '#EF4444', green: '#10B981', orange: '#F97316',
+    green: '#00B25B', gold: '#F59E0B', red: '#EF4444', blue: '#3B82F6', gray: '#9CA3AF',
+}; const ChartWrapper = ({ title, children }) => (
+    <div className="fb-card p-5 flex flex-col h-[380px]">
+        <div className="text-sm font-semibold text-text-primary mb-4 border-b border-border pb-3">{title}</div>
+        <div className="flex-1 min-h-0 text-xs">
+            {children}
+        </div>
+    </div>
+);
+
+const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="bg-white border border-border p-3 rounded-lg shadow-sm text-sm">
+                <p className="font-semibold text-text-primary mb-1">{label || payload[0].name}</p>
+                <p className="text-brand-green font-medium">Count: {payload[0].value}</p>
+            </div>
+        );
+    }
+    return null;
 };
 
 export default function Analytics() {
@@ -35,84 +54,77 @@ export default function Analytics() {
 
     const TONE_COLORS_MAP = {
         'Позитивный': COLORS.green,
-        'Нейтральный': COLORS.gold,
+        'Нейтральный': COLORS.gray,
         'Негативный': COLORS.red
     };
 
-    const ChartWrapper = ({ title, children }) => (
-        <div className="terminal-card p-4 flex flex-col h-[350px]">
-            <div className="text-[10px] font-bold uppercase text-text-muted mb-4 tracking-widest border-b border-border pb-2 font-mono">{title}</div>
-            <div className="flex-1 min-h-0 font-mono">
-                {children}
-            </div>
-        </div>
-    );
+
 
     return (
-        <div className="flex flex-col h-full gap-6 overflow-y-auto pr-2 pb-6 scrollbar-terminal">
-            <h1 className="text-xl font-bold tracking-tight text-accent-gold font-mono uppercase">DEEP_ANALYTICS_TERMINAL</h1>
+        <div className="flex flex-col h-full gap-6 overflow-y-auto pr-2 pb-6 font-sans">
+            <h1 className="text-2xl font-bold tracking-tight text-text-primary">Analytics Overview</h1>
 
             <div className="grid grid-cols-2 gap-6">
 
                 {/* Request Types - Horizontal Bar */}
-                <ChartWrapper title="REQUEST_TYPES_DISTRIBUTION">
+                <ChartWrapper title="Request Types Distribution">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={data.types} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
                             <XAxis type="number" hide />
-                            <YAxis dataKey="name" type="category" stroke="#64748B" width={100} axisLine={false} tickLine={false} tick={{ fontSize: 9, fontStyle: 'monospace' }} />
-                            <Tooltip cursor={{ fill: '#1C222D' }} contentStyle={{ backgroundColor: '#0B0E14', border: '1px solid #1F2937', color: '#F59E0B', fontSize: '10px' }} />
-                            <Bar dataKey="value" fill={COLORS.gold} barSize={12} radius={[0, 0, 0, 0]} />
+                            <YAxis dataKey="name" type="category" stroke="#6B7280" width={110} axisLine={false} tickLine={false} tick={{ fontSize: 11 }} />
+                            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
+                            <Bar dataKey="value" fill={COLORS.green} barSize={16} radius={[0, 4, 4, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartWrapper>
 
                 {/* Tone Distribution - Donut */}
-                <ChartWrapper title="TONE_SENTIMENT_BREAKDOWN">
+                <ChartWrapper title="Sentiment Breakdown">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                            <Pie data={data.tone} innerRadius="50%" outerRadius="80%" paddingAngle={2} dataKey="value" stroke="#0B0E14" strokeWidth={1} label={({ name, percent }) => `${name.toUpperCase()} ${(percent * 100).toFixed(0)}%`}>
+                            <Pie data={data.tone} innerRadius="55%" outerRadius="85%" paddingAngle={3} dataKey="value" stroke="none" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
                                 {data.tone.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={TONE_COLORS_MAP[entry.name] || COLORS.blue} />
                                 ))}
                             </Pie>
-                            <Tooltip contentStyle={{ backgroundColor: '#0B0E14', border: '1px solid #1F2937', color: '#E2E8F0', fontSize: '10px' }} />
+                            <Tooltip content={<CustomTooltip />} />
                         </PieChart>
                     </ResponsiveContainer>
                 </ChartWrapper>
 
                 {/* Tickets by City - Vertical Bar */}
-                <ChartWrapper title="ORIGIN_CITY_DENSITY">
+                <ChartWrapper title="Origin City Density">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data.cities} margin={{ top: 10, right: 30, left: 0, bottom: 40 }}>
-                            <XAxis dataKey="name" stroke="#64748B" interval={0} angle={-45} textAnchor="end" height={60} tick={{ fontSize: 9 }} />
-                            <YAxis stroke="#64748B" tick={{ fontSize: 9 }} />
-                            <Tooltip cursor={{ fill: '#1C222D' }} contentStyle={{ backgroundColor: '#0B0E14', border: '1px solid #1F2937', color: '#E2E8F0', fontSize: '10px' }} />
-                            <Bar dataKey="value" fill={COLORS.gold} radius={[0, 0, 0, 0]} barSize={20} />
+                        <BarChart data={data.cities} margin={{ top: 10, right: 30, left: 0, bottom: 50 }}>
+                            <XAxis dataKey="name" stroke="#6B7280" interval={0} angle={-45} textAnchor="end" height={70} tick={{ fontSize: 11 }} />
+                            <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
+                            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
+                            <Bar dataKey="value" fill={COLORS.green} radius={[4, 4, 0, 0]} barSize={24} />
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartWrapper>
 
                 {/* Priority Histogram */}
-                <ChartWrapper title="PRIORITY_SCORE_DISTRIBUTION">
+                <ChartWrapper title="Priority Score Distribution">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={data.priority} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
-                            <XAxis dataKey="name" stroke="#64748B" tick={{ fontSize: 9 }} />
-                            <YAxis stroke="#64748B" tick={{ fontSize: 9 }} />
-                            <Tooltip cursor={{ fill: '#1C222D' }} contentStyle={{ backgroundColor: '#0B0E14', border: '1px solid #1F2937', color: '#E2E8F0', fontSize: '10px' }} />
-                            <Bar dataKey="value" fill={COLORS.red} barSize={30} />
+                            <XAxis dataKey="name" stroke="#6B7280" tick={{ fontSize: 11 }} />
+                            <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
+                            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
+                            <Bar dataKey="value" fill={COLORS.gold} barSize={36} radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartWrapper>
 
                 {/* Manager Workload - Horizontal Bar */}
                 <div className="col-span-2">
-                    <ChartWrapper title="MANAGER_WORKLOAD_DEEP_DIVE">
+                    <ChartWrapper title="Manager Workload Deep Dive">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data.workload} margin={{ top: 10, right: 30, left: 0, bottom: 60 }}>
-                                <XAxis dataKey="name" stroke="#64748B" angle={-45} textAnchor="end" height={80} interval={0} tick={{ fontSize: 9 }} />
-                                <YAxis stroke="#64748B" tick={{ fontSize: 9 }} />
-                                <Tooltip cursor={{ fill: '#1C222D' }} contentStyle={{ backgroundColor: '#0B0E14', border: '1px solid #1F2937', color: '#F59E0B', fontSize: '10px' }} />
-                                <Bar dataKey="value" fill={COLORS.green} radius={[0, 0, 0, 0]} name="ASSET_COUNT" barSize={14} />
+                            <BarChart data={data.workload} margin={{ top: 10, right: 30, left: 0, bottom: 70 }}>
+                                <XAxis dataKey="name" stroke="#6B7280" angle={-45} textAnchor="end" height={90} interval={0} tick={{ fontSize: 11 }} />
+                                <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
+                                <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
+                                <Bar dataKey="value" fill={COLORS.green} radius={[4, 4, 0, 0]} barSize={20} />
                             </BarChart>
                         </ResponsiveContainer>
                     </ChartWrapper>

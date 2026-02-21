@@ -8,16 +8,16 @@ export default {
     extend: {
       colors: {
         bg: {
-          primary: '#0B0E14',    // Deep Night
-          secondary: '#151921',  // Card Surface
-          tertiary: '#1C222D',   // Input/Header
+          primary: '#F8F9FA',
+          secondary: '#FFFFFF',
+          tertiary: '#F3F4F6',
         },
         brand: {
           green: '#00B25B',
           hover: '#008F49',
-          amber: '#0bee0bff',
+          amber: '#F59E0B',
         },
-        border: '#1F2937',
+        border: '#E5E7EB',
         accent: {
           blue: '#3B82F6',
           gold: '#F59E0B',
@@ -26,23 +26,16 @@ export default {
           orange: '#F97316',
         },
         text: {
-          primary: '#E2E8F0',    // Slate White
-          secondary: '#94A3B8',  // Slate Gray
-          muted: '#64748B',      // Dark Slate
+          primary: '#1F2937',
+          secondary: '#4B5563',
+          muted: '#9CA3AF',
         }
       },
       fontFamily: {
-        sans: ['JetBrains Mono', 'monospace'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
-      backgroundImage: {
-        'terminal-gradient': 'linear-gradient(180deg, rgba(21, 25, 33, 0.8) 0%, rgba(11, 14, 20, 0.9) 100%)',
-      },
-      boxShadow: {
-        'terminal': '0 0 0 1px rgba(245, 158, 11, 0.1)',
-        'terminal-focus': '0 0 0 2px rgba(245, 158, 11, 0.2)',
-      }
     },
   },
   plugins: [],
-}
+};
