@@ -3,7 +3,9 @@ import { Bot, Send, User, ChevronDown, ChevronUp } from 'lucide-react';
 import api from '../utils/api';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
-const COLORS = ['#00B25B', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#10B981', '#EC4899'];
+const COLORS = ['#22C55E', '#3B82F6', '#E5A00D', '#EF4444', '#8B5CF6', '#10B981', '#EC4899'];
+const CHART_TOOLTIP = { cursor: { fill: '#252525' }, contentStyle: { backgroundColor: '#1A1A1A', border: '1px solid #2A2A2A', color: '#E5E5E5', borderRadius: '8px', boxShadow: 'none' } };
+const CHART_AXIS = '#737373';
 
 export default function Assistant() {
     const [messages, setMessages] = useState([
@@ -43,13 +45,13 @@ export default function Assistant() {
         if (data.chart_type === 'bar' || data.chart_type === 'horizontal_bar') {
             const isHoriz = data.chart_type === 'horizontal_bar';
             return (
-                <div className="h-[300px] w-full mt-4 bg-[#1F2937] border border-gray-700 rounded-xl p-5 shadow-sm">
+                <div className="h-[300px] w-full mt-4 bg-bg-secondary border border-border rounded-xl p-5">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={data.data} layout={isHoriz ? "vertical" : "horizontal"} margin={{ top: 10, right: 30, left: 10, bottom: 20 }}>
-                            {isHoriz ? <XAxis type="number" stroke="#6B7280" fontSize={11} /> : <XAxis dataKey="name" stroke="#6B7280" angle={-45} textAnchor="end" fontSize={11} />}
-                            {isHoriz ? <YAxis dataKey="name" type="category" stroke="#6B7280" width={100} fontSize={11} /> : <YAxis stroke="#6B7280" fontSize={11} />}
-                            <Tooltip cursor={{ fill: '#111827' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
-                            <Bar dataKey="value" fill="#00B25B" radius={[4, 4, 4, 4]} barSize={20} />
+                            {isHoriz ? <XAxis type="number" stroke={CHART_AXIS} fontSize={11} /> : <XAxis dataKey="name" stroke={CHART_AXIS} angle={-45} textAnchor="end" fontSize={11} />}
+                            {isHoriz ? <YAxis dataKey="name" type="category" stroke={CHART_AXIS} width={100} fontSize={11} /> : <YAxis stroke={CHART_AXIS} fontSize={11} />}
+                            <Tooltip cursor={CHART_TOOLTIP.cursor} contentStyle={CHART_TOOLTIP.contentStyle} />
+                            <Bar dataKey="value" fill="#22C55E" radius={[4, 4, 4, 4]} barSize={20} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -58,13 +60,13 @@ export default function Assistant() {
 
         if (data.chart_type === 'pie' || data.chart_type === 'donut') {
             return (
-                <div className="h-[300px] w-full mt-4 bg-[#1F2937] border border-gray-700 rounded-xl p-5 shadow-sm">
+                <div className="h-[300px] w-full mt-4 bg-bg-secondary border border-border rounded-xl p-5">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie data={data.data} innerRadius={data.chart_type === 'donut' ? "60%" : 0} outerRadius="85%" dataKey="value" stroke="none" paddingAngle={2}>
                                 {data.data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                             </Pie>
-                            <Tooltip contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                            <Tooltip contentStyle={CHART_TOOLTIP.contentStyle} />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
@@ -73,13 +75,13 @@ export default function Assistant() {
 
         if (data.chart_type === 'line') {
             return (
-                <div className="h-[300px] w-full mt-4 bg-[#1F2937] border border-gray-700 rounded-xl p-5 shadow-sm">
+                <div className="h-[300px] w-full mt-4 bg-bg-secondary border border-border rounded-xl p-5">
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={data.data} margin={{ top: 10, right: 30, left: 10, bottom: 20 }}>
-                            <XAxis dataKey="name" stroke="#6B7280" fontSize={11} />
-                            <YAxis stroke="#6B7280" fontSize={11} />
-                            <Tooltip contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
-                            <Line type="monotone" dataKey="value" stroke="#00B25B" strokeWidth={3} dot={{ r: 4, fill: '#00B25B', strokeWidth: 2, stroke: '#ffffff' }} activeDot={{ r: 6 }} />
+                            <XAxis dataKey="name" stroke={CHART_AXIS} fontSize={11} />
+                            <YAxis stroke={CHART_AXIS} fontSize={11} />
+                            <Tooltip contentStyle={CHART_TOOLTIP.contentStyle} />
+                            <Line type="monotone" dataKey="value" stroke="#22C55E" strokeWidth={3} dot={{ r: 4, fill: '#22C55E', strokeWidth: 2, stroke: '#1E1E1E' }} activeDot={{ r: 6 }} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
@@ -88,12 +90,12 @@ export default function Assistant() {
 
         // Default to table if unknown or 'table'
         return (
-            <div className="mt-4 border border-gray-700 bg-[#1F2937] w-full rounded-xl overflow-hidden shadow-sm">
+            <div className="mt-4 border border-border bg-bg-secondary w-full rounded-xl overflow-hidden">
                 <table className="w-full text-left">
-                    <thead className="bg-[#111827] text-text-muted">
+                    <thead className="bg-bg-tertiary text-text-muted">
                         <tr>
-                            <th className="p-3 border-b border-gray-700 text-xs font-semibold uppercase tracking-wider">{data.x_axis_label || 'Category'}</th>
-                            <th className="p-3 border-b border-gray-700 text-xs font-semibold uppercase tracking-wider text-right">{data.y_axis_label || 'Value'}</th>
+                            <th className="p-3 border-b border-border text-xs font-semibold uppercase tracking-wider">{data.x_axis_label || 'Category'}</th>
+                            <th className="p-3 border-b border-border text-xs font-semibold uppercase tracking-wider text-right">{data.y_axis_label || 'Value'}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,7 +115,7 @@ export default function Assistant() {
         <div className="flex flex-col h-full bg-bg-primary overflow-hidden border border-border rounded-xl shadow-sm font-sans mx-2 my-2">
 
             {/* Header */}
-            <div className="p-4 border-b border-gray-700 bg-[#111827] flex items-center justify-between shrink-0">
+            <div className="p-4 border-b border-border bg-bg-secondary flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-4">
                     <div className="bg-brand-green/10 text-brand-green p-2.5 rounded-lg">
                         <Bot size={22} />
@@ -143,19 +145,19 @@ export default function Assistant() {
 
                 {messages.map((m, i) => (
                     <div key={i} className={`flex gap-4 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                        <div className={`shrink-0 w-10 h-10 flex items-center justify-center rounded-full border shadow-sm ${m.role === 'user' ? 'bg-[#1F2937] border-gray-700 text-gray-200' :
+                        <div className={`shrink-0 w-10 h-10 flex items-center justify-center rounded-full border ${m.role === 'user' ? 'bg-bg-secondary border-border text-text-primary' :
                             m.role === 'system' ? 'bg-accent-red/10 text-accent-red border-accent-red/20' :
                                 'bg-brand-green/10 text-brand-green border-brand-green/20'}`}>
                             {m.role === 'user' ? <User size={18} /> : <Bot size={18} />}
                         </div>
 
-                        <div className={`max-w-[85%] ${m.role === 'user' ? 'bg-[#1F2937] border border-gray-700 text-gray-200 p-4 rounded-2xl rounded-tr-sm shadow-sm text-sm' : 'fb-card p-5 !rounded-tl-sm'} ${m.role === 'system' ? '!bg-bg-tertiary text-text-muted font-medium text-sm border border-border shadow-none' : ''}`}>
-                            {m.text && <div className={m.role === 'ai' || m.role === 'user' ? 'text-gray-200 text-sm leading-relaxed whitespace-pre-line' : ''}>{m.text}</div>}
+                        <div className={`max-w-[85%] ${m.role === 'user' ? 'bg-bg-secondary border border-border text-text-primary p-4 rounded-2xl rounded-tr-sm text-sm' : 'fb-card p-5 !rounded-tl-sm'} ${m.role === 'system' ? '!bg-bg-tertiary text-text-muted font-medium text-sm border border-border' : ''}`}>
+                            {m.text && <div className={m.role === 'ai' || m.role === 'user' ? 'text-text-primary text-sm leading-relaxed whitespace-pre-line' : ''}>{m.text}</div>}
 
                             {m.data && (
                                 <div className="flex flex-col gap-3 w-full max-w-[700px]">
-                                    {m.data.title && <h3 className="text-lg font-bold text-gray-200 tracking-tight mt-1">{m.data.title}</h3>}
-                                    {m.data.insight && <p className="text-sm text-gray-300 leading-relaxed bg-[#111827] p-4 rounded-xl border border-gray-700 shadow-sm">{m.data.insight}</p>}
+                                    {m.data.title && <h3 className="text-lg font-bold text-text-primary tracking-tight mt-1">{m.data.title}</h3>}
+                                    {m.data.insight && <p className="text-sm text-text-secondary leading-relaxed bg-bg-tertiary p-4 rounded-xl border border-border">{m.data.insight}</p>}
 
                                     {m.data.error ? (
                                         <div className="text-accent-red border border-accent-red/20 bg-accent-red/5 p-4 rounded-xl text-sm font-medium">{m.data.error}</div>
@@ -169,7 +171,7 @@ export default function Assistant() {
                                             <ChevronUp size={14} className="hidden group-open:block" />
                                             View Raw Data
                                         </summary>
-                                        <pre className="mt-3 p-4 bg-text-primary text-bg-primary rounded-xl overflow-x-auto text-[11px] font-mono shadow-inner">
+                                        <pre className="mt-3 p-4 bg-bg-tertiary text-text-primary rounded-xl overflow-x-auto text-[11px] font-mono border border-border">
                                             {JSON.stringify(m.data, null, 2)}
                                         </pre>
                                     </details>
@@ -192,7 +194,7 @@ export default function Assistant() {
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-gray-700 bg-[#111827] shrink-0">
+            <div className="p-4 border-t border-border bg-bg-secondary shrink-0">
                 <form onSubmit={handleSubmit} className="flex gap-3 items-center max-w-4xl mx-auto w-full relative">
                     <input
                         type="text"

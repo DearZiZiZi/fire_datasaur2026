@@ -22,7 +22,7 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="h-[64px] bg-bg-secondary border-b border-border flex items-center justify-between px-8 fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <header className="h-[64px] bg-bg-secondary border-b border-border flex items-center justify-between px-8 fixed top-0 left-0 right-0 z-50">
             <div className="flex items-center gap-6">
                 <div className="flex items-center gap-3 pr-6 border-r border-border h-8">
                     <img src="/logo.png" alt="FreedomBroker Logo" className="h-6 w-auto object-contain" />
