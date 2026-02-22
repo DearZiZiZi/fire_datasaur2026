@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 router = APIRouter(prefix="/api/assistant", tags=["assistant"])
 
@@ -63,16 +63,29 @@ async def query_assistant(req: AssistantRequest, db: AsyncSession = Depends(get_
 
     prompt = ASSISTANT_SYSTEM.replace("{stats_json}", json.dumps(stats))
     
+    import asyncio
     try:
-        response = await model.generate_content_async(
-            contents=[{"role": "user", "parts": [{"text": prompt}, {"text": req.query}]}],
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                response_schema=AssistantResponse,
-                temperature=0.2
-            )
+        response = await asyncio.wait_for(
+            model.generate_content_async(
+                contents=[{"role": "user", "parts": [{"text": prompt}, {"text": req.query}]}],
+                generation_config=genai.GenerationConfig(
+                    response_mime_type="application/json",
+                    response_schema=AssistantResponse,
+                    temperature=0.2
+                )
+            ),
+            timeout=10
         )
         return json.loads(response.text)
+    except asyncio.TimeoutError:
+        return {
+            "chart_type": "bar",
+            "title": "Timeout",
+            "data": [],
+            "x_axis_label": "",
+            "y_axis_label": "",
+            "insight": "Gemini API response timed out. Please try again or rephrase your query."
+        }
     except Exception as e:
         return {
             "chart_type": "bar",
