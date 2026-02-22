@@ -33,9 +33,10 @@ To run the FIRE application locally, you need to run both the frontend and backe
 Ensure you have a Neon Database connection string. Create a `.env` file in the `backend/` directory and add your database URL, 2GIS API key, and Groq API key:
 
 ```env
-DATABASE_URL=postgresql://user:password@ep-name.region.aws.neon.tech/dbname?sslmode=require
-API_KEY_2GIS= get from: https://dev.2gis.ru/en/api
-GROQ_API_KEY= get from: https://console.groq.com/keys
+NEON_DATABASE_URL=postgresql://user:password@ep-name.region.aws.neon.tech/dbname?sslmode=require
+API_KEY_2GIS = get from: https://dev.2gis.ru/en/api
+GROQ_API_KEY = get from: https://console.groq.com/keys
+GEMINI_API_KEY = get from: https://aistudio.google.com 
 ```
 
 ### 2. Backend Server

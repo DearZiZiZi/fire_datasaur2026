@@ -2,12 +2,15 @@ import httpx
 import os
 import re
 import logging
-
-API_KEY_2GIS = os.getenv("API_KEY_2GIS")
-logger = logging.getLogger("geo_service")
 import math
 from typing import Tuple, Optional, List
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
+
+API_KEY_2GIS = os.getenv("API_KEY_2GIS")
+
+logger = logging.getLogger("geo_service")
 
 GEO_CACHE = {}
 

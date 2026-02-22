@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 import os
+from dotenv import load_dotenv
 
 from routers import tickets, managers, analytics, assistant, synthetic
 

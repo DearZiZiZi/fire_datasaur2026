@@ -5,11 +5,12 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 from groq import Groq
+from dotenv import load_dotenv
 
+load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY)
-
 
 def encode_image(image_path):
     with open(image_path, "rb") as image_file:

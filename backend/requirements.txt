@@ -10,3 +10,4 @@ greenlet
 pydantic
 pydantic-settings
 groq
+sse-starlette
