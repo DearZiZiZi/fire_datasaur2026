@@ -4,7 +4,7 @@
 
 ## Финальные метрики по тестам
 
-[notbook](freedom-broker-datasaur-2026-code.ipynb)
+[Jupyter Notebook](freedom-broker-datasaur-2026-code.ipynb) + [Kaggle Notebook](https://www.kaggle.com/code/armanzhalgasbayev/freedom-broker-datasaur-2026-code)
 
 * Tickets: 186
 * Managers: 51
