@@ -41,9 +41,9 @@ export default function DistributionMap() {
     }, []);
 
     const getOfficeColor = (load) => {
-        if (load < 5) return '#00B25B'; // Brand Green
-        if (load < 10) return '#F59E0B'; // Gold
-        return '#EF4444'; // Red
+        if (load < 5) return '#22C55E';
+        if (load < 10) return '#E5A00D';
+        return '#EF4444';
     };
 
     if (loading) return <div className="h-full w-full flex items-center justify-center bg-bg-primary text-text-muted font-medium text-sm animate-pulse">Loading Map Telemetry...</div>;
@@ -54,7 +54,7 @@ export default function DistributionMap() {
                 center={[48.0196, 66.9237]}
                 zoom={4}
                 className="h-full w-full"
-                style={{ background: '#0B0E14' }}
+                style={{ background: '#0D0D0D' }}
                 zoomControl={false}
             >
                 <TileLayer
@@ -75,11 +75,11 @@ export default function DistributionMap() {
                         }}
                         radius={10 + (office.load * 0.5)}
                     >
-                        <Popup className="rounded-xl shadow-md border-0">
-                            <div className="text-xs font-sans bg-[#1F2937] text-white p-3 min-w-[160px] rounded-xl shadow-lg border border-gray-700">
-                                <strong className="text-white text-sm tracking-tight">{office.office}</strong><br />
-                                <span className="text-gray-400 mt-1 block">{office.address}</span>
-                                <span className="font-semibold text-brand-green mt-3 block border-t border-gray-700 pt-2 text-[11px] uppercase tracking-wider">Load Balance: {office.load} Assets</span>
+                        <Popup className="rounded-xl border-0">
+                            <div className="text-xs font-sans bg-bg-secondary text-text-primary p-3 min-w-[160px] rounded-xl border border-border">
+                                <strong className="text-text-primary text-sm tracking-tight">{office.office}</strong><br />
+                                <span className="text-text-muted mt-1 block">{office.address}</span>
+                                <span className="font-semibold text-brand-green mt-3 block border-t border-border pt-2 text-[11px] uppercase tracking-wider">Load Balance: {office.load} Assets</span>
                             </div>
                         </Popup>
                     </CircleMarker>
@@ -95,7 +95,7 @@ export default function DistributionMap() {
                             <Polyline
                                 positions={[[t.lat, t.lng], [targetOffice.lat, targetOffice.lng]]}
                                 pathOptions={{
-                                    color: '#00B25B',
+                                    color: '#22C55E',
                                     weight: 1.5,
                                     dashArray: '4, 8',
                                     opacity: 0.6
@@ -103,7 +103,7 @@ export default function DistributionMap() {
                             />
                             <CircleMarker
                                 center={[t.lat, t.lng]}
-                                pathOptions={{ color: '#00B25B', weight: 1.5, fillOpacity: 1, fillColor: '#0B0E14' }}
+                                pathOptions={{ color: '#22C55E', weight: 1.5, fillOpacity: 1, fillColor: '#0D0D0D' }}
                                 radius={3}
                             />
                         </React.Fragment>
@@ -112,24 +112,24 @@ export default function DistributionMap() {
             </MapContainer>
 
             {/* Legend Overlay */}
-            <div className="absolute bottom-6 left-6 z-[1000] bg-[#1F2937] border border-gray-700 p-5 rounded-xl pointer-events-none shadow-lg font-sans max-w-[200px]">
-                <div className="text-xs font-semibold uppercase text-gray-400 mb-4 tracking-wider border-b border-gray-700 pb-2">Load Capacity</div>
+            <div className="absolute bottom-6 left-6 z-[1000] bg-bg-secondary border border-border p-5 rounded-xl pointer-events-none font-sans max-w-[200px]">
+                <div className="text-xs font-semibold uppercase text-text-muted mb-4 tracking-wider border-b border-border pb-2">Load Capacity</div>
                 <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 rounded-full bg-brand-green shadow-[0_0_8px_rgba(0,178,91,0.5)]"></div>
-                        <span className="text-sm font-medium text-gray-200">Optimal Level</span>
+                        <div className="w-3 h-3 rounded-full bg-brand-green"></div>
+                        <span className="text-sm font-medium text-text-secondary">Optimal Level</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 rounded-full bg-accent-gold shadow-[0_0_8px_rgba(245,158,11,0.5)]"></div>
-                        <span className="text-sm font-medium text-gray-200">Moderate Load</span>
+                        <div className="w-3 h-3 rounded-full bg-accent-gold"></div>
+                        <span className="text-sm font-medium text-text-secondary">Moderate Load</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 rounded-full bg-accent-red shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
-                        <span className="text-sm font-medium text-gray-200">Critical Saturation</span>
+                        <div className="w-3 h-3 rounded-full bg-accent-red"></div>
+                        <span className="text-sm font-medium text-text-secondary">Critical Saturation</span>
                     </div>
-                    <div className="flex items-center gap-3 border-t border-gray-700 pt-4 mt-2">
+                    <div className="flex items-center gap-3 border-t border-border pt-4 mt-2">
                         <div className="w-6 h-[2px] border-t-2 border-dashed border-brand-green opacity-70"></div>
-                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Routing Vector</span>
+                        <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Routing Vector</span>
                     </div>
                 </div>
             </div>

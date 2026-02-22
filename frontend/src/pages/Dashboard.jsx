@@ -5,12 +5,18 @@ import { Play, TrendingUp, AlertTriangle, CheckCircle2, Map, ShieldCheck, Activi
 import DistributionMap from '../components/DistributionMap';
 
 const COLORS = {
-    green: '#00B25B', // brand green
-    gold: '#F59E0B',
+    green: '#22C55E',
+    gold: '#E5A00D',
     red: '#EF4444',
     blue: '#3B82F6',
-    gray: '#9CA3AF',
+    gray: '#737373',
 };
+
+const CHART_TOOLTIP = {
+    cursor: { fill: '#252525' },
+    contentStyle: { backgroundColor: '#1A1A1A', border: '1px solid #2A2A2A', color: '#E5E5E5', borderRadius: '8px', boxShadow: 'none' },
+};
+const CHART_AXIS_STROKE = '#737373';
 
 const TONE_COLORS = {
     'Позитивный': COLORS.green,
@@ -103,7 +109,7 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 bg-bg-primary">
             {/* Top KPI Bar */}
             <div className="grid grid-cols-5 gap-6">
                 <div className="fb-card p-5 flex flex-col gap-2">
@@ -165,8 +171,8 @@ export default function Dashboard() {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={typesData} layout="vertical" margin={{ top: 0, right: 20, left: 10, bottom: 0 }}>
                                 <XAxis type="number" hide />
-                                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#4B5563', fontSize: 11 }} width={90} />
-                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: CHART_AXIS_STROKE, fontSize: 11 }} width={90} />
+                                <Tooltip cursor={CHART_TOOLTIP.cursor} contentStyle={CHART_TOOLTIP.contentStyle} />
                                 <Bar dataKey="value" fill={COLORS.green} radius={[0, 4, 4, 0]} barSize={16} />
                             </BarChart>
                         </ResponsiveContainer>
@@ -175,7 +181,7 @@ export default function Dashboard() {
 
                 {/* Center: Geographic Distribution */}
                 <div className="fb-card p-0 flex flex-col overflow-hidden relative">
-                    <div className="absolute top-4 left-4 z-10 bg-[#1F2937]/90 backdrop-blur border border-gray-700 px-3 py-1.5 rounded-lg text-sm font-semibold text-gray-200 flex items-center gap-2 shadow-sm">
+                    <div className="absolute top-4 left-4 z-10 bg-bg-secondary/95 backdrop-blur border border-border px-3 py-1.5 rounded-lg text-sm font-semibold text-text-primary flex items-center gap-2">
                         <Map size={16} className="text-brand-green" /> Regional Distribution MAP
                     </div>
                     <DistributionMap />
@@ -187,9 +193,9 @@ export default function Dashboard() {
                     <div className="flex-1 min-h-0 text-xs">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={priorityData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                                <XAxis dataKey="name" stroke="#6B7280" tick={{ fontSize: 11 }} />
-                                <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
-                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <XAxis dataKey="name" stroke={CHART_AXIS_STROKE} tick={{ fontSize: 11 }} />
+                                <YAxis stroke={CHART_AXIS_STROKE} tick={{ fontSize: 11 }} />
+                                <Tooltip cursor={CHART_TOOLTIP.cursor} contentStyle={CHART_TOOLTIP.contentStyle} />
                                 <Bar dataKey="value" fill={COLORS.gold} barSize={24} radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
@@ -205,9 +211,9 @@ export default function Dashboard() {
                     <div className="flex-1 min-h-0 text-xs">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={workloadData} margin={{ top: 10, right: 10, left: -20, bottom: 50 }}>
-                                <XAxis dataKey="name" stroke="#6B7280" angle={-45} textAnchor="end" height={70} interval={0} tick={{ fontSize: 11 }} />
-                                <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
-                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <XAxis dataKey="name" stroke={CHART_AXIS_STROKE} angle={-45} textAnchor="end" height={70} interval={0} tick={{ fontSize: 11 }} />
+                                <YAxis stroke={CHART_AXIS_STROKE} tick={{ fontSize: 11 }} />
+                                <Tooltip cursor={CHART_TOOLTIP.cursor} contentStyle={CHART_TOOLTIP.contentStyle} />
                                 <Bar dataKey="value" fill={COLORS.green} radius={[4, 4, 0, 0]} barSize={20} />
                             </BarChart>
                         </ResponsiveContainer>
@@ -220,9 +226,9 @@ export default function Dashboard() {
                     <div className="flex-1 min-h-0 text-xs">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={cityData} margin={{ top: 10, right: 10, left: -20, bottom: 50 }}>
-                                <XAxis dataKey="name" stroke="#6B7280" interval={0} angle={-45} textAnchor="end" height={70} tick={{ fontSize: 11 }} />
-                                <YAxis stroke="#6B7280" tick={{ fontSize: 11 }} />
-                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <XAxis dataKey="name" stroke={CHART_AXIS_STROKE} interval={0} angle={-45} textAnchor="end" height={70} tick={{ fontSize: 11 }} />
+                                <YAxis stroke={CHART_AXIS_STROKE} tick={{ fontSize: 11 }} />
+                                <Tooltip cursor={CHART_TOOLTIP.cursor} contentStyle={CHART_TOOLTIP.contentStyle} />
                                 <Bar dataKey="value" fill={COLORS.green} radius={[4, 4, 0, 0]} barSize={24} />
                             </BarChart>
                         </ResponsiveContainer>
@@ -294,7 +300,7 @@ export default function Dashboard() {
                                         <span className="text-xs font-medium text-text-primary truncate" title={ticket.customer_guid}>{ticket.customer_guid.split('-')[0]}...</span>
                                         <div className="flex items-center gap-1.5">
                                             {ticket.priority_score && (
-                                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ticket.priority_score >= 8 ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ticket.priority_score >= 8 ? 'bg-accent-red/20 text-accent-red' : 'bg-accent-gold/20 text-accent-gold'}`}>
                                                     P{ticket.priority_score}
                                                 </span>
                                             )}
@@ -350,7 +356,7 @@ export default function Dashboard() {
                                         <Cell key={`cell-${index}`} fill={TONE_COLORS[entry.name] || COLORS.gray} stroke="none" />
                                     ))}
                                 </Pie>
-                                <Tooltip cursor={{ fill: '#1F2937' }} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', color: '#F3F4F6', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} />
+                                <Tooltip cursor={CHART_TOOLTIP.cursor} contentStyle={CHART_TOOLTIP.contentStyle} />
                             </PieChart>
                         </ResponsiveContainer>
                         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">

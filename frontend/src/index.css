@@ -6,10 +6,15 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply bg-bg-primary;
+    background-color: #0D0D0D;
+  }
   body {
     @apply bg-bg-primary text-text-primary font-sans antialiased;
     margin: 0;
     padding: 0;
+    background-color: #0D0D0D;
   }
 
   ::-webkit-scrollbar {
@@ -26,21 +31,26 @@
   }
 
   :root {
-    --brand-amber: #F59E0B;
+    --brand-amber: #E5A00D;
     --accent-blue: #3B82F6;
     --accent-red: #EF4444;
-    --terminal-green: #10B981;
+    --terminal-green: #22C55E;
+    --chart-tooltip-bg: #1A1A1A;
+    --chart-tooltip-border: #2A2A2A;
+    --chart-tooltip-text: #E5E5E5;
+    --chart-cursor: #252525;
+    --chart-axis: #737373;
   }
 }
 
 @layer components {
   .fb-card {
     @apply bg-bg-secondary border border-border rounded-xl transition-all;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04);
   }
 
   .fb-card:hover {
-    @apply shadow-md;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.06);
   }
 
   .fb-table {
@@ -66,7 +76,7 @@
 
   .fb-input:focus {
     @apply border-brand-green ring-1 ring-brand-green/20;
-    box-shadow: 0 0 0 2px rgba(0, 178, 91, 0.2);
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.25);
   }
 
   .fb-btn {

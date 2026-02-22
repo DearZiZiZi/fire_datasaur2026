@@ -8,32 +8,35 @@ export default {
     extend: {
       colors: {
         bg: {
-          primary: '#F8F9FA',
-          secondary: '#FFFFFF',
-          tertiary: '#F3F4F6',
+          primary: '#0D0D0D',
+          secondary: '#161616',
+          tertiary: '#1E1E1E',
         },
         brand: {
-          green: '#00B25B',
-          hover: '#008F49',
-          amber: '#F59E0B',
+          green: '#22C55E',
+          hover: '#16A34A',
+          amber: '#E5A00D',
         },
-        border: '#E5E7EB',
+        border: '#2A2A2A',
         accent: {
           blue: '#3B82F6',
-          gold: '#F59E0B',
+          gold: '#E5A00D',
           red: '#EF4444',
-          green: '#10B981',
-          orange: '#F97316',
+          green: '#22C55E',
+          orange: '#F59E0B',
         },
         text: {
-          primary: '#1F2937',
-          secondary: '#4B5563',
-          muted: '#9CA3AF',
+          primary: '#E5E5E5',
+          secondary: '#A3A3A3',
+          muted: '#737373',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+      },
+      boxShadow: {
+        'bloom': '0 1px 0 0 rgba(255,255,255,0.04)',
       },
     },
   },
