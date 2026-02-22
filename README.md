@@ -33,9 +33,11 @@ To run the FIRE application locally, you need to run both the frontend and backe
 Ensure you have a Neon Database connection string. Create a `.env` file in the `backend/` directory and add your database URL and Google API key:
 
 ```env
-DATABASE_URL=postgresql://user:password@ep-name.region.aws.neon.tech/dbname?sslmode=require
+NEON_DATABASE_URL=postgresql://user:password@ep-name.region.aws.neon.tech/dbname?sslmode=require
 GOOGLE_API_KEY=your_gemini_api_key
 ```
+
+The backend expects **`NEON_DATABASE_URL`** (not `DATABASE_URL`). Get the connection string from your [Neon](https://neon.tech) project dashboard.
 
 ### 2. Backend Server
 Navigate to the `backend` directory, install the dependencies, and start the FastAPI server:
