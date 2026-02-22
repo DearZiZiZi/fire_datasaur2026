@@ -122,7 +122,7 @@ export default function Assistant() {
                     </div>
                     <div>
                         <h2 className="font-bold text-text-primary text-lg tracking-tight">Intelligence Assistant</h2>
-                        <p className="text-xs text-text-secondary font-medium mt-0.5">Powered by Gemini 1.5 Pro</p>
+                        <p className="text-xs text-text-secondary font-medium mt-0.5">Powered by Google Gemini</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
