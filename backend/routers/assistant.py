@@ -9,6 +9,8 @@ from routers.analytics import (
     fetch_overview, fetch_by_type, fetch_by_city, 
     fetch_by_tone, fetch_workload, fetch_priority_dist
 )
+from dotenv import load_dotenv
+load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel("gemini-1.5-flash")
